@@ -1,0 +1,39 @@
+version: '3'
+services:
+  zookeeper:
+    image: zookeeper:3.6.2
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - messageloop
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+  kafka:
+    image: bitnami/kafka:2.6.0
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    networks:
+      - messageloop
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    depends_on:
+      - zookeeper  
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9000:9000"
+    networks:
+      - messageloop
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:9092"
+    depends_on:
+      - kafka
+networks:
+  messageloop:
