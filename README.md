@@ -20,3 +20,9 @@ This project outlines simple methods to utilize the following technologies using
 
 ## Deployment and Execution
 
+## Placing a message on the queue
+
+Using kafkacat, execute the following command to test the kafka message ingestion on the beta service:
+
+    # Example - make this correct
+    echo 'publish to partition 0' | kafkacat -P -b localhost:19092,localhost:29092,localhost:39092 -t foo -p 0

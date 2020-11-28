@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	functions "message-loop/pkg"
+	"message-loop/pkg"
 )
 
 func main() {
 	fmt.Println("mainTest")
-	functions.Function()
+	pkg.Function()
 }
