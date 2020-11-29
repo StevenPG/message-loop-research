@@ -8,4 +8,5 @@ import (
 func main() {
 	fmt.Println("mainTest")
 	pkg.Function()
+	pkg.ConsumeMessage()
 }

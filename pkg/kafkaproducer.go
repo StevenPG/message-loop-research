@@ -3,7 +3,7 @@ package pkg
 import (
 	"fmt"
 
-	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 /**
@@ -35,13 +35,11 @@ func ProduceMessage() {
 	}()
 
 	// Produce messages to topic (asynchronously)
-	topic := "myTopic"
-	for _, word := range []string{"Welcome", "to", "the", "Confluent", "Kafka", "Golang", "client"} {
-		p.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-			Value:          []byte(word),
-		}, nil)
-	}
+	topic := "loop-topic"
+	p.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		Value:          []byte("Hello,World!"),
+	}, nil)
 
 	// Wait for message deliveries before shutting down
 	p.Flush(15 * 1000)
