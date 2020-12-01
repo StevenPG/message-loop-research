@@ -12,7 +12,7 @@ import (
 **/
 
 // ProduceMessage - Provide message as string to be sent to Kafka
-func ProduceMessage() {
+func ProduceMessage(message string) {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
 	if err != nil {
 		panic(err)
@@ -38,7 +38,7 @@ func ProduceMessage() {
 	topic := "loop-topic"
 	p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value:          []byte("Hello,World!"),
+		Value:          []byte(message),
 	}, nil)
 
 	// Wait for message deliveries before shutting down
