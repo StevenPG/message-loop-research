@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"message-loop/pkg/rpcdemo"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
@@ -18,6 +19,7 @@ func ConsumeMessage() {
 		"group.id":          "myGroup",
 		"auto.offset.reset": "earliest",
 	})
+	defer c.Close()
 
 	if err != nil {
 		panic(err)
@@ -27,6 +29,8 @@ func ConsumeMessage() {
 
 	for {
 		msg, err := c.ReadMessage(-1)
+		fmt.Println("Received " + msg.String())
+		rpcdemo.MakegRPCRequest()
 		if err == nil {
 			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
 		} else {
@@ -34,6 +38,4 @@ func ConsumeMessage() {
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 		}
 	}
-
-	c.Close()
 }

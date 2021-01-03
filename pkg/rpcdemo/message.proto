@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package grpc;
+option go_package = "grpc";
+
+message outRequest {
+  string content = 1;
+}
+
+message outResponse {
+  string content = 1;
+}
+
+service outService {
+  rpc makeRequest(outRequest) returns (outResponse) {};
+}
