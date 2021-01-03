@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
@@ -34,13 +35,23 @@ func ProduceMessage(message string) {
 		}
 	}()
 
-	// Produce messages to topic (asynchronously)
-	topic := "loop-topic"
-	p.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value:          []byte(message),
-	}, nil)
+	for t := range time.Tick(5 * time.Second) {
+		go sendMessage(p, message, t)
+	}
 
 	// Wait for message deliveries before shutting down
 	p.Flush(15 * 1000)
+}
+
+
+func sendMessage(p *kafka.Producer, message string, t time.Time) {
+	// Produce messages to topic (asynchronously)
+	topic := "loop-topic"
+
+	msg := message + t.String()
+
+	p.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		Value:          []byte(msg),
+	}, nil)
 }

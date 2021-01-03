@@ -2,12 +2,12 @@ package pkg
 
 import "github.com/gin-gonic/gin"
 
-// RunWebServer - starts the alpha web server
-func RunWebServer() {
+// RunWebServerSendKafka - starts the alpha web server
+func RunWebServerSendKafka() {
 	r := gin.Default()
 	r.GET("/start", func(c *gin.Context) {
 		// TODO - produce original message every 15 seconds in goroutine
-		ProduceMessage("Http-In")
+		ProduceMessage("Http-In -> ")
 		c.JSON(200, gin.H{
 			"message": "HTTP-In",
 			"ordinal": 0,
