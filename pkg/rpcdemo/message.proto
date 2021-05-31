@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package rpcdemo;
+option go_package = "./pkg/rpcdemo";
+
+message OutRequest {
+  string content = 1;
+}
+
+message OutResponse {
+  string content = 1;
+}
+
+service OutService {
+  rpc makeRequest(OutRequest) returns (OutResponse) {};
+}

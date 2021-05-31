@@ -2,8 +2,9 @@ package pkg
 
 import (
 	"fmt"
+	"time"
 
-	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 /**
@@ -12,7 +13,7 @@ import (
 **/
 
 // ProduceMessage - Provide message as string to be sent to Kafka
-func ProduceMessage() {
+func ProduceMessage(message string) {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
 	if err != nil {
 		panic(err)
@@ -34,15 +35,23 @@ func ProduceMessage() {
 		}
 	}()
 
-	// Produce messages to topic (asynchronously)
-	topic := "myTopic"
-	for _, word := range []string{"Welcome", "to", "the", "Confluent", "Kafka", "Golang", "client"} {
-		p.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-			Value:          []byte(word),
-		}, nil)
+	for t := range time.Tick(5 * time.Second) {
+		go sendMessage(p, message, t)
 	}
 
 	// Wait for message deliveries before shutting down
 	p.Flush(15 * 1000)
+}
+
+
+func sendMessage(p *kafka.Producer, message string, t time.Time) {
+	// Produce messages to topic (asynchronously)
+	topic := "loop-topic"
+
+	msg := message + t.String()
+
+	p.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		Value:          []byte(msg),
+	}, nil)
 }
