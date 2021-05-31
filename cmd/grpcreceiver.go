@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"google.golang.org/grpc"
 	"log"
 	"message-loop/pkg/rpcdemo"
 	"net"
+
+	"google.golang.org/grpc"
 )
 
 func main() {
